@@ -15,27 +15,52 @@ export default {
     ExchangeComponent
   },
 
-  data(){ return{
-          ratesToEuro: [],
-          currencies: {}
-        }
+  data(){ 
+    return{
+    currencies: {},
+      }
 
     },
 
   created()
   {
-    Axios.get("https://api.exchangeratesapi.io/latest")
+    this.loadFiatCurrencies()
+  },
+  methods:
+  {
+    loadFiatCurrencies()
+    {
+   Axios.get("https://api.exchangeratesapi.io/latest?base=USD")
     .then((response)=>{
-
-     var newCurrencies = {}
-
-      for (const [key, value] of Object.entries(response.data.rates)) {
-      newCurrencies[key] = value;
-      }
+     let newCurrencies = {}
+          for (const [key, value] of Object.entries(response.data.rates)) {
+          newCurrencies[key] = value;
+          }
       newCurrencies[response.data.base] = 1;
       this.currencies = newCurrencies;
+      console.log("I was called")  
+      })
 
-})
+    },
+
+    loadCryptoCurrencies() 
+    {  
+    Axios.get("https://api.binance.com/api/v3/ticker/price")
+    .then((response) =>{
+     let keys = []
+     for (const [key,value] of Object.entries(response.data))
+     {
+        keys.push(key)
+        this.currencies[value.symbol] = (1/value.price)
+     }    
+    })
+
+
+    },
+
+    unloadCryptoCurrencies(){
+
+    }
   }
 
 }

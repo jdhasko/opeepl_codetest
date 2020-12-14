@@ -34,6 +34,24 @@
                     <p>1 {{ toCurrency }} = {{valueOfOneReverse}} {{fromCurrency}}</p>
                     </div>
 
+                    <div class="flex-container info-container">
+                    <div class="description">
+                        <p>Fiat data is provided by: <a href="https://exchangeratesapi.io/.">www.exchangeratesapi.io</a></p>
+                        <p>Crypto data is provided by: <a href="https://api.binance.com/api/v3/ticker/price"> www.api.binance.com</a></p>
+
+
+
+                    </div>
+                    <div class="buttons-container">
+                    <button  v-if="crypto === false"  @click="loadCryptoData" id="crypto-button" >  
+                        <div class="flex-container space-between">
+                         <img src="../assets/Bitcoin.png" alt="bitcoin icon" height="30px" width="30px">
+                         <label v-if="crypto === false" >Add crypto</label>
+                         <label v-if="crypto === true">Remove crypto</label>
+                        </div>
+                    </button>
+                    </div>
+                    </div>
         </div>
     </div>
 </template>
@@ -43,14 +61,21 @@ export default {
     name:'ExchangeComponent',
     props:
     {
-        currencies: {}
+        currencies: {},
+    },
+    data() {
+        return{
+            fromValue: "",
+            fromCurrency:"HUF",
+            toCurrency:"DKK",
+            toValue:null,
+            crypto:false
+        }
     },
     methods:{
         onChangeInput()
         {
-            console.log("The script has run!")
             let input = this.toNumberFormat(this.fromValue)
-            console.log(input)
             let rateFrom = this.currencies[this.fromCurrency]
             let rateTo = this.currencies[this.toCurrency]   
             let result = this.calculate(input,rateFrom,rateTo)
@@ -61,7 +86,7 @@ export default {
         
         calculate(amount, rateFrom, rateTo)
         {
-            let result = (amount / rateFrom)*rateTo
+            let result = (amount / rateFrom) * rateTo
             return result.toFixed(2)
         },
 
@@ -83,14 +108,18 @@ export default {
             this.fromCurrency = this.toCurrency
             this.toCurrency = container
             this.onChangeInput()
-        }
-    },
-    data() {
-        return{
-            fromValue: "",
-            fromCurrency:"HUF",
-            toCurrency:"DKK",
-            toValue:null
+        },
+        loadCryptoData()
+        {
+
+            this.crypto = !this.crypto;
+            if(this.crypto){
+           this.$parent.loadCryptoCurrencies();
+            }
+            else
+            {
+            this.$parent.loadCryptoCurrencies();
+            }
 
         }
     },
@@ -132,7 +161,8 @@ export default {
     top:10%;
     margin:auto;
     width: 55%;
-    height: 45%;
+    height: auto;
+    padding: 25px;
     background-color: rgba(0, 0, 0, 0.74);
 }
 
@@ -159,9 +189,10 @@ export default {
 }
 
 h2{
-    padding: 25px;
+    padding: 5px;
     font-size: 25px;
-    margin: 0;
+    margin:0;
+    margin-bottom: 15px;
     color: white;
 }
 
@@ -230,6 +261,10 @@ select:hover
     font-weight: 700;
     text-align: right;
 }
+select:focus
+{
+    outline: none;
+}
 
 .exchange-header p
 {
@@ -270,4 +305,77 @@ select:hover
     color: #2F7ED8;
     font-weight: 800;
 }
+
+.buttons-container
+{
+    height: auto;
+    text-align: right;
+}
+
+#crypto-button{
+    height: 40px;
+    width: 180px;
+    justify-content: space-between;
+    font-size: 13px;
+    background: #ff9416;
+    color:white;
+    border: 0;
+    border-radius: 15px;
+    text-shadow: 1px 1px 3px rgb(0, 0, 0);
+    transition: color 1s, width 0.4s, height 0.4s, font-size 0.4s;
+    text-align: center ;
+    margin-top: 35px;
+    position: relative;
+
+}
+
+#crypto-button:hover{
+    background: #e78009;
+    height: 44px;
+    width: 198px;
+    font-size: 16px;
+}
+#crypto-button:active{
+    background: #bd6b0d;
+
+}
+#crypto-button:focus{
+    outline:none;
+}
+
+#crypto-button label{
+    padding: 8px;
+    width: 70%;
+}
+#crypto-button img{
+    height: 32px;
+    width: 32px;
+        display: inline-block;
+}
+.space-between
+{
+    padding: 3px 0;
+    justify-content: space-between;
+}
+.info-container{
+    margin-top: 20px;
+}
+.description
+{
+    margin-top: 35px;
+
+}
+.description p
+{   
+    text-align: left;
+}
+a
+{
+color: #2F7ED8;
+}
+a:visited
+{
+color: #2F7ED8;
+}
+
 </style>
