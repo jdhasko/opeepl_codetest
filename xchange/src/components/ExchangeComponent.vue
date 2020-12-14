@@ -15,7 +15,11 @@
                                             </option>
                                       </select>
                                 </div>
+                                <div>
+                                <button @click="switchCurrencies" id="switch-button">&#xE7FD;</button>
                                 <p id="equal-sign"> = </p>
+                                    
+                                </div>
                                 <div class="input-container">
                                       <input v-model="toValue" placeholder="0" disabled/> 
                                       <select v-model="toCurrency" @change="onChangeInput">
@@ -30,7 +34,6 @@
                     <p>1 {{ toCurrency }} = {{valueOfOneReverse}} {{fromCurrency}}</p>
                     </div>
 
-                    <button id="switch-button"/>
         </div>
     </div>
 </template>
@@ -73,6 +76,13 @@ export default {
             let result = String(value).replace(/\s/g, '')
             result = result.replace(',','.')
             return result
+        },
+        switchCurrencies()
+        {
+            let container = this.fromCurrency
+            this.fromCurrency = this.toCurrency
+            this.toCurrency = container
+            this.onChangeInput()
         }
     },
     data() {
@@ -144,6 +154,7 @@ export default {
     background: white;
     padding: 5px;
     border-radius: 15px;
+    margin: 10px;
     
 }
 
@@ -156,7 +167,7 @@ h2{
 
 #equal-sign
 {
-font-size: 30px;
+font-size: 25px;
 color: white;
 }
 
@@ -164,7 +175,7 @@ p
 {
     margin: 0;
     text-align: center;
-    padding: 6px 0;
+    padding: 0px 0;
 }
 #result-display
 {
@@ -210,7 +221,15 @@ select
     font-weight: 700;
     text-align: right;
 }
-
+select:hover
+{
+    width: 23%;
+    border: none;
+    font-size: 22px;
+    color:#2a5e99;
+    font-weight: 700;
+    text-align: right;
+}
 
 .exchange-header p
 {
@@ -224,5 +243,31 @@ select
     margin-left: 4%;
     display: flex;
     justify-content:space-around;
+}
+
+#switch-button
+{
+    height: 35px;
+    width: 35px;
+    background: none;
+    font-family:'Segoe MDL2 Assets';
+    color: white;
+    border: none;
+    font-size: 20px;
+    text-align: center;
+
+    transition: color 1s, font-size 0.4s;
+}
+
+#switch-button:focus{
+    outline: none;
+    border: none;
+}
+
+#switch-button:hover
+{
+    font-size: 23px;
+    color: #2F7ED8;
+    font-weight: 800;
 }
 </style>
