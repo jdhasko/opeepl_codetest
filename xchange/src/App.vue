@@ -1,6 +1,6 @@
 <template>
     <Header/>
-    <p> {{this.currencies}} </p>
+    <p> {{this.otherCurrency}} </p>
     <Exchange-component :currencies=this.currencies   />
 </template>
 
@@ -18,7 +18,7 @@ export default {
 
   data(){ return{
           ratesToEuro: [],
-          currencies: []
+          currencies: {}
         }
 
     },
@@ -28,14 +28,12 @@ export default {
     Axios.get("https://api.exchangeratesapi.io/latest")
     .then((response)=>{
 
-     var newCurrencies = []
+     var newCurrencies = {}
 
-      console.log(response.data);
       for (const [key, value] of Object.entries(response.data.rates)) {
-      console.log(key, value);
-      newCurrencies.push(key)
+      newCurrencies[key] = value;
       }
-      newCurrencies.unshift(response.data.base)
+      newCurrencies[response.data.base] = 1;
       this.currencies = newCurrencies;
 
 })
