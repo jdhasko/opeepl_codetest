@@ -2,9 +2,13 @@
     <div class="main-container">
         <div class="exchange-container">
                     <h2>Fiat and crypto currency exchange</h2>
+                    <div class="exchange-header">
+                    <p>Convert from</p>
+                    <p>Convert to</p>
+                    </div>
                     <div class="flex-container">
                                 <div class="input-container">
-                                    <input v-model="fromValue" @change="onChangeInput"/> 
+                                    <input v-model="fromValue" @change="onChangeInput" placeholder="0"/> 
                                        <select v-model="fromCurrency" @change="onChangeInput" >
                                             <option v-for="c in Object.keys(currencies)" :key="c" :value="c">
                                                 {{ c }}
@@ -13,7 +17,7 @@
                                 </div>
                                 <p id="equal-sign"> = </p>
                                 <div class="input-container">
-                                      <input v-model="toValue"/> 
+                                      <input v-model="toValue" placeholder="0" disabled/> 
                                       <select v-model="toCurrency" @change="onChangeInput">
                                             <option v-for="c in Object.keys(currencies)" :key="c" :value="c">
                                            {{ c }}
@@ -21,6 +25,12 @@
                                       </select>
                                 </div>
                     </div>
+                    <div class="flex-container">
+                    <p>1 {{ fromCurrency }} = {{valueOfOne}} {{toCurrency}}</p>
+                    <p>1 {{ toCurrency }} = {{valueOfOneReverse}} {{fromCurrency}}</p>
+                    </div>
+
+                    <button id="switch-button"/>
         </div>
     </div>
 </template>
@@ -74,6 +84,17 @@ export default {
 
         }
     },
+    computed:
+    {
+        valueOfOne: function()  
+        {
+            return this.calculate(1,this.currencies[this.fromCurrency],this.currencies[this.toCurrency])
+        },
+        valueOfOneReverse: function()
+        {
+              return this.calculate(1,this.currencies[this.toCurrency],this.currencies[this.fromCurrency])
+        }
+    }
 
 
 
@@ -90,9 +111,9 @@ export default {
     height: 91%;
     width: 100%;
     background-image: url("./../assets/background.jpg");
-    background: whitesmoke;
     color: white;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.466);
+
 }
 
 .exchange-container
@@ -102,8 +123,7 @@ export default {
     margin:auto;
     width: 55%;
     height: 45%;
-    background-color: rgba(0, 0, 0, 0.336);
-    
+    background-color: rgba(0, 0, 0, 0.74);
 }
 
 
@@ -137,7 +157,7 @@ h2{
 #equal-sign
 {
 font-size: 30px;
-color: black;
+color: white;
 }
 
 p
@@ -156,17 +176,31 @@ p
 
 input
 {
-    width: 70%;
+    width: 74%;
     border-radius: 25px;
     text-align: right;
-    font-size: 30px;
+    font-size: 28px;
     border: none;
     font-weight: 550;
 }
+input:disabled
+{
+    color: black;
+}
+
+input::placeholder
+{
+    color:gray;
+    font-weight: 500;
+    font-size: 25px;
+    margin-bottom:3px;
+}
+
 input:focus
 {
 outline: none;
 }
+
 select
 {
     width: 23%;
@@ -177,4 +211,18 @@ select
     text-align: right;
 }
 
+
+.exchange-header p
+{
+    width: 95px;
+    display: inline;
+}
+
+.exchange-header
+{
+    width: 90%;
+    margin-left: 4%;
+    display: flex;
+    justify-content:space-around;
+}
 </style>

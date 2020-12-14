@@ -1,6 +1,5 @@
 <template>
     <Header/>
-    <p> {{this.otherCurrency}} </p>
     <Exchange-component :currencies=this.currencies   />
 </template>
 
