@@ -43,7 +43,7 @@
 
                     </div>
                     <div class="buttons-container">
-                    <button  v-if="crypto === false"  @click="loadCryptoData" id="crypto-button" >  
+                    <button  @click="loadCryptoData" id="crypto-button" >  
                         <div class="flex-container space-between">
                          <img src="../assets/Bitcoin.png" alt="bitcoin icon" height="30px" width="30px">
                          <label v-if="crypto === false" >Add crypto</label>
@@ -118,7 +118,7 @@ export default {
             }
             else
             {
-            this.$parent.loadCryptoCurrencies();
+            this.$parent.loadFiatCurrencies();
             }
 
         }
@@ -369,13 +369,6 @@ select:focus
 {   
     text-align: left;
 }
-a
-{
-color: #2F7ED8;
-}
-a:visited
-{
-color: #2F7ED8;
-}
+
 
 </style>

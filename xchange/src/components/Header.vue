@@ -18,7 +18,7 @@ img {
 }
 .header-container
 {
-    background-color: rgba(0, 0, 0, 0.808);
+    background-color: rgb(0, 0, 0);
     z-index: 100;
 }
 </style>

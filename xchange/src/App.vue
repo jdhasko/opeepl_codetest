@@ -1,18 +1,21 @@
 <template>
     <Header/>
     <Exchange-component :currencies=this.currencies   />
+    <Footer/>
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import ExchangeComponent from './components/ExchangeComponent.vue'
+import Footer from './components/Footer.vue'
 import Axios from 'axios'
 
 export default {
   name: 'App',
   components: {
     Header,
-    ExchangeComponent
+    ExchangeComponent,
+    Footer
   },
 
   data(){ 
