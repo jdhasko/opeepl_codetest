@@ -1,5 +1,7 @@
 body {
   margin: 0;
+  background-image: url(".././assets/background.jpg");
+  background-repeat: repeat;
 }
 a {
   color: #2f7ed8;

@@ -15,10 +15,14 @@ export default {
 <style scoped>
 .footer-container
 {
-    position: absolute;
-    bottom: 0;
+    position: relative;
+    bottom: 0%;
     width: 100%;
     background: black;
     color: white;
+    padding: 5px 0;
+}
+p{
+    margin: 0;
 }
 </style>

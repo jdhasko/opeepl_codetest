@@ -1,5 +1,4 @@
 <template>
-    <div class="main-container">
         <div class="exchange-container">
                     <h2>Fiat and crypto currency exchange</h2>
                     <div class="exchange-header">
@@ -53,10 +52,11 @@
                     </div>
                     </div>
         </div>
-    </div>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     name:'ExchangeComponent',
     props:
@@ -73,8 +73,7 @@ export default {
         }
     },
     methods:{
-        onChangeInput()
-        {
+        onChangeInput(){
             let input = this.toNumberFormat(this.fromValue)
             let rateFrom = this.currencies[this.fromCurrency]
             let rateTo = this.currencies[this.toCurrency]   
@@ -82,6 +81,15 @@ export default {
             this.toValue = this.toCurrencyFormat(result)
             this.fromValue = this.toCurrencyFormat(input)
 
+            if(this.fromValue != 0){
+            this.$parent.history.push({
+                    "fromValue":this.fromValue,
+                    "fromCurrency":this.fromCurrency,
+                    "toValue":this.toValue,
+                    "toCurrency":this.toCurrency,
+                    "time": moment(Date()).format('LTS'),
+                })
+                }
         },
         
         calculate(amount, rateFrom, rateTo)
@@ -119,9 +127,11 @@ export default {
             else
             {
             this.$parent.loadFiatCurrencies();
-            }
+            console.log(this.fromCurrency)
+             if(this.fromCurrency.length > 3 || this.fromCurrency.length < 3){this.fromCurrency = "EUR"}
+             if(this.toCurrency.length > 3 || this.toCurrency.length < 3){this.toCurrency = "DKK"}
 
-        }
+        }}
     },
     computed:
     {
@@ -145,23 +155,15 @@ export default {
 
 
 <style scoped>
-.main-container{
-    position: absolute;
-    height: 91%;
-    width: 100%;
-    background-image: url("./../assets/background.jpg");
-    color: white;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.466);
-
-}
 
 .exchange-container
 {
     position: relative;
-    top:10%;
     margin:auto;
+    margin-top: 50px;
     width: 55%;
     height: auto;
+    top: 10%;
     padding: 25px;
     background-color: rgba(0, 0, 0, 0.74);
 }
@@ -326,6 +328,7 @@ select:focus
     text-align: center ;
     margin-top: 35px;
     position: relative;
+    margin-bottom:5px
 
 }
 
@@ -359,6 +362,7 @@ select:focus
 }
 .info-container{
     margin-top: 20px;
+    height:80px;
 }
 .description
 {

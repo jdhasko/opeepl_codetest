@@ -1,29 +1,34 @@
 <template>
     <Header/>
-    <Exchange-component :currencies=this.currencies   />
-    <Footer/>
+        <div class="main-container">
+        <Exchange-component :currencies=this.currencies   />
+        <HistoryComponent :history=this.history />
+        </div>
+    <!-- <Footer/> -->
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import ExchangeComponent from './components/ExchangeComponent.vue'
-import Footer from './components/Footer.vue'
+// import Footer from './components/Footer.vue'
 import Axios from 'axios'
+import HistoryComponent from './components/HistoryComponent.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
     ExchangeComponent,
-    Footer
+    HistoryComponent,
+    // Footer
   },
 
   data(){ 
     return{
     currencies: {},
-      }
-
-    },
+    fiatCurrencies:{},
+    history:[]
+      }},
 
   created()
   {
@@ -41,6 +46,7 @@ export default {
           }
       newCurrencies[response.data.base] = 1;
       this.currencies = newCurrencies;
+      this.fiatCurrencies = newCurrencies;
       console.log("I was called")  
       })
 
@@ -62,6 +68,11 @@ export default {
     },
 
     unloadCryptoCurrencies(){
+      this.currencies = null;
+      for (const [key] of this.fiatCurrencies)
+      {
+        this.currencies[key] = this.fiatCurrencies[key]
+      }
 
     }
   }
@@ -77,4 +88,15 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.main-container{
+    position: relative;
+    display: block;
+    height: auto;
+    width: 100%;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.466);
+
+}
+
 </style>
+
