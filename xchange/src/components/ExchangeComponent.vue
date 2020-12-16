@@ -7,7 +7,7 @@
                     </div>
                     <div class="flex-container">
                                 <div class="input-container">
-                                    <input v-model="fromValue" @change="onChangeInput" placeholder="0"/> 
+                                    <input v-model="fromValue" @change="onChangeInput" @keypress=" finterNonNumbericInput($event)" placeholder="0"/> 
                                        <select v-model="fromCurrency" @change="onChangeInput" >
                                             <option v-for="c in Object.keys(currencies)" :key="c" :value="c">
                                                 {{ c }}
@@ -82,14 +82,28 @@ export default {
             this.fromValue = this.toCurrencyFormat(input)
 
             if(this.fromValue != 0){
+            this.addDataToHistory(this.fromValue,this.fromCurrency,this.toValue,this.toCurrency)
+            }
+        },
+
+        finterNonNumbericInput: function(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                evt.preventDefault()}
+             else return true;
+        
+        },
+
+        addDataToHistory(fromValue,fromCurrency,toValue,toCurrency)
+        {
             this.$parent.history.push({
-                    "fromValue":this.fromValue,
-                    "fromCurrency":this.fromCurrency,
-                    "toValue":this.toValue,
-                    "toCurrency":this.toCurrency,
+                    "fromValue":fromValue,
+                    "fromCurrency":fromCurrency,
+                    "toValue":toValue,
+                    "toCurrency":toCurrency,
                     "time": moment(Date()).format('LTS'),
                 })
-                }
         },
         
         calculate(amount, rateFrom, rateTo)
@@ -226,6 +240,7 @@ input
     font-size: 28px;
     border: none;
     font-weight: 550;
+    padding-right: 5px;
 }
 input:disabled
 {

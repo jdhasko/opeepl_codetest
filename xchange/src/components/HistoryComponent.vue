@@ -66,25 +66,25 @@ table
     margin: auto;
     text-align: center;
     margin-top:20px;
-    border:0;
+    border: 1px solid #2F7ED8;
+    border-collapse:collapse;
 }
 
 
 
-th, td {
-    border: 0;
 
-}
 
 table th
 {
         background: #2F7ED8;
-        padding: 15px
+        padding: 10px;
 }
 table td
 {
     background: white;
     color:black;
+    padding: 3px 0px;
+    border: 1px solid #2F7ED8;
 }
 p
 {
