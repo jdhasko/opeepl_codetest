@@ -4,13 +4,13 @@
         <Exchange-component :currencies=this.currencies   />
         <HistoryComponent :history=this.history />
         </div>
-    <!-- <Footer/> -->
+    <Footer/>
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import ExchangeComponent from './components/ExchangeComponent.vue'
-// import Footer from './components/Footer.vue'
+import Footer from './components/Footer.vue'
 import Axios from 'axios'
 import HistoryComponent from './components/HistoryComponent.vue'
 
@@ -20,13 +20,12 @@ export default {
     Header,
     ExchangeComponent,
     HistoryComponent,
-    // Footer
+    Footer
   },
 
   data(){ 
     return{
     currencies: {},
-    fiatCurrencies:{},
     history:[]
       }},
 
@@ -34,8 +33,14 @@ export default {
   {
     this.loadFiatCurrencies()
   },
+
+
   methods:
   {
+
+    /**
+     * Method that takes no parameters and loads fiat currencies into the currencies property. 
+     */
     loadFiatCurrencies()
     {
    Axios.get("https://api.exchangeratesapi.io/latest?base=USD")
@@ -46,12 +51,14 @@ export default {
           }
       newCurrencies[response.data.base] = 1;
       this.currencies = newCurrencies;
-      this.fiatCurrencies = newCurrencies;
-      console.log("I was called")  
       })
 
     },
 
+
+    /**
+     * Method that takes no parameters and adds crypto currencies into the currencies property.
+     */
     loadCryptoCurrencies() 
     {  
     Axios.get("https://api.binance.com/api/v3/ticker/price")
@@ -67,14 +74,6 @@ export default {
 
     },
 
-    unloadCryptoCurrencies(){
-      this.currencies = null;
-      for (const [key] of this.fiatCurrencies)
-      {
-        this.currencies[key] = this.fiatCurrencies[key]
-      }
-
-    }
   }
 
 }

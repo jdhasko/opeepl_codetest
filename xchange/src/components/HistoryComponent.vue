@@ -68,6 +68,7 @@ table
     margin-top:20px;
     border: 1px solid #2F7ED8;
     border-collapse:collapse;
+
 }
 
 
@@ -108,7 +109,7 @@ p
     padding: 25px;
     background-color: rgba(0, 0, 0, 0.74);
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 45px;
     transition: width 2s, height 2s;
 }
 

@@ -15,7 +15,7 @@ export default {
 <style scoped>
 .footer-container
 {
-    position: relative;
+    position:fixed;
     bottom: 0%;
     width: 100%;
     background: black;

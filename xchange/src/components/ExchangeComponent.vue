@@ -42,7 +42,7 @@
 
                     </div>
                     <div class="buttons-container">
-                    <button  @click="loadCryptoData" id="crypto-button" >  
+                    <button  @click="loadCryptoData" id="crypto-button" :class="crypto ? 'inactive' : 'active'" >  
                         <div class="flex-container space-between">
                          <img src="../assets/Bitcoin.png" alt="bitcoin icon" height="30px" width="30px">
                          <label v-if="crypto === false" >Add crypto</label>
@@ -73,19 +73,39 @@ export default {
         }
     },
     methods:{
+
+        /**
+         * A method that's called every time the input changes or the currency has been changed. It takes no paramaters.
+         * 
+         */
         onChangeInput(){
-            let input = this.toNumberFormat(this.fromValue)
-            let rateFrom = this.currencies[this.fromCurrency]
-            let rateTo = this.currencies[this.toCurrency]   
+
+            this.updateProperties(this.fromValue,this.fromCurrency,this.toCurrency)
+            if(this.fromValue != 0){this.addDataToHistory(this.fromValue,this.fromCurrency,this.toValue,this.toCurrency)}
+        },
+
+        /**
+         * Method that updates the properties, calls @method calculate() to exchange the entered value
+         * and calls @method toCurrencyFormat() on the displayed amout of money.
+         * Takes 3 parameters:
+         * @param valueBefore is the amount of money that is to be exchanged.
+         * @param currencyFrom is the currency we would like to exchange from.
+         * @param currencyTo is the currency we would like to convert to.
+         */
+        updateProperties(valueBefore,currencyFrom,currencyTo)
+        {
+            let input = this.toNumberFormat(valueBefore)
+            let rateFrom = this.currencies[currencyFrom]
+            let rateTo = this.currencies[currencyTo]   
             let result = this.calculate(input,rateFrom,rateTo)
             this.toValue = this.toCurrencyFormat(result)
             this.fromValue = this.toCurrencyFormat(input)
-
-            if(this.fromValue != 0){
-            this.addDataToHistory(this.fromValue,this.fromCurrency,this.toValue,this.toCurrency)
-            }
         },
 
+
+        /**
+         * This method prevents user from using non-numeric input.
+         */
         finterNonNumbericInput: function(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -95,6 +115,13 @@ export default {
         
         },
 
+        /**
+         * This method adds a new item to the history list. Takes 4 parameters:
+         * @param fromValue is the amount of money that got converted.
+         * @param fromCurrency is the currency the money got converted from.
+         * @param toValue is the amount of money after it got exchanged to the desired currency.
+         * @param toCurrency is the currency the money got converted into.
+         */
         addDataToHistory(fromValue,fromCurrency,toValue,toCurrency)
         {
             this.$parent.history.push({
@@ -106,24 +133,50 @@ export default {
                 })
         },
         
+        /**
+         * This method is responsible for converting an amount of money to another currency.
+         * Takes 3 parameters:
+         * @param amount is the amount of money that is to be exchanged.
+         * @param rateFrom is the exchange rate of the base currency
+         * @param rateTo is the exhange rate of the currency we would like to exchange into.
+         * Important! The from and to rates have to be based for the same currency in order to get correct result.
+         */
         calculate(amount, rateFrom, rateTo)
         {
             let result = (amount / rateFrom) * rateTo
             return result.toFixed(2)
         },
 
+
+        /**
+         * This method converts numbers into currency format so they are nicely displayed.
+         * Takes one parameter:
+         * @param value is the number that is to be displayed as currency.
+         */
         toCurrencyFormat(value)
         {
+            //(adds decimal comma)
+            //(could be changed to local prefference)
             return new Intl.NumberFormat('hu-HU').format(value);
-
-        
         },
+
+        /**
+         * This method converts back from the currency format to normal number format
+         * Takes one parameter:
+         * @param value the number in currency format that is to be converted back to simple number format
+         */
         toNumberFormat(value)
         {
             let result = String(value).replace(/\s/g, '')
             result = result.replace(',','.')
             return result
         },
+
+
+        /**
+         * This method is used to switch the currency we convert from with the currency we convert to.
+         * It calles @method onChangeInput()
+         */
         switchCurrencies()
         {
             let container = this.fromCurrency
@@ -131,28 +184,41 @@ export default {
             this.toCurrency = container
             this.onChangeInput()
         },
+
+        /**
+         * This method calls the @methodloadCrytoCurrencies method in the parent class.
+         * It can active or deactive the status of crypto currencies.
+         */
         loadCryptoData()
         {
-
             this.crypto = !this.crypto;
-            if(this.crypto){
-           this.$parent.loadCryptoCurrencies();
-            }
-            else
-            {
-            this.$parent.loadFiatCurrencies();
-            console.log(this.fromCurrency)
-             if(this.fromCurrency.length > 3 || this.fromCurrency.length < 3){this.fromCurrency = "EUR"}
-             if(this.toCurrency.length > 3 || this.toCurrency.length < 3){this.toCurrency = "DKK"}
-
-        }}
+                if(this.crypto){ this.$parent.loadCryptoCurrencies();}
+                
+                //it's not the best solution because the API is every time to override the excisting data 
+                //instead of using the already chased data, but I had issues with that approach, so I settled with this for now.
+                else 
+                { this.$parent.loadFiatCurrencies();
+                      if(this.fromCurrency.length > 3 || this.fromCurrency.length < 3){this.fromCurrency = "EUR"}
+                    if(this.toCurrency.length > 3 || this.toCurrency.length < 3){this.toCurrency = "DKK"}
+                }
+                       
+        }
     },
+
+
     computed:
     {
+        /**
+         * Computed property that displays the value of 1 unit of the chosen currency.
+         */
         valueOfOne: function()  
         {
             return this.calculate(1,this.currencies[this.fromCurrency],this.currencies[this.toCurrency])
         },
+
+        /**
+         * Computed property that displays the value of 1 unit of the chosen currency.
+         */
         valueOfOneReverse: function()
         {
               return this.calculate(1,this.currencies[this.toCurrency],this.currencies[this.fromCurrency])
@@ -231,16 +297,13 @@ p
     text-shadow: none;
     width: 70%;
 }
-
 input
 {
     width: 74%;
-    border-radius: 25px;
     text-align: right;
     font-size: 28px;
     border: none;
     font-weight: 550;
-    padding-right: 5px;
 }
 input:disabled
 {
@@ -329,7 +392,8 @@ select:focus
     text-align: right;
 }
 
-#crypto-button{
+
+.active , .inactive{
     height: 40px;
     width: 180px;
     justify-content: space-between;
@@ -343,15 +407,23 @@ select:focus
     text-align: center ;
     margin-top: 35px;
     position: relative;
-    margin-bottom:5px
+    margin-bottom:5px;
+}
+.inactive
+{
+    background: #3f3d3c;
 
 }
 
-#crypto-button:hover{
+.active:hover, .inactive:hover{
     background: #e78009;
     height: 44px;
     width: 198px;
     font-size: 16px;
+}
+
+.inactive:hover{
+    background: #636260;
 }
 #crypto-button:active{
     background: #bd6b0d;
